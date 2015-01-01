@@ -1,0 +1,40 @@
+# Copied from docker git at https://github.com/dotcloud/docker.git
+# This sets up a vagrant ubuntu precise box using virtualbox.
+# Can also be used to launch AWS image.
+# Simply run "vagrant up" to get everything setup locally.
+# The file is meant to install docker by default
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX_NAME = ENV['BOX_NAME'] || "docker-tesseract"
+BOX_URI = ENV['BOX_URI'] || "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+FORWARD_DOCKER_PORTS = ENV['FORWARD_DOCKER_PORTS']
+APP_DATA = ENV['APP_DATA']
+VM_MEMORY = ENV['VM_MEMORY'] || "512"
+
+Vagrant.configure("2") do |config|
+  # Setup virtual machine box. This VM configuration code is always executed.
+  config.vm.box = BOX_NAME
+  config.vm.box_url = BOX_URI
+  config.vm.network :forwarded_port, :host => 4243, :guest => 4243
+  config.vm.network :forwarded_port, :host => 8888, :guest => 3333
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", VM_MEMORY]
+  end
+
+  # Provision docker and new kernel if deployment was not done
+  if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*/id").empty?
+    config.vm.provision :shell, path: "vagrant/provision.sh"
+  end
+
+  if !APP_DATA.nil?
+    config.vm.synced_folder APP_DATA, "/data"
+  end
+
+  if !FORWARD_DOCKER_PORTS.nil?
+    (49000..49900).each do |port|
+      config.vm.network :forwarded_port, :host => port, :guest => port
+    end
+  end
+end
