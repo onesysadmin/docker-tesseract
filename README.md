@@ -52,7 +52,7 @@ To add Tesseract OCR traineddata files, copy the traineddata files to 'vendor/te
 
 ##Using the Container
 
-1.  Run 'sudo docker run -i -t -v <host absolute path>:<docker path> <image id>'
+1.  Run 'sudo docker run -i -t -v &lt;host absolute path&gt;:&lt;docker path&gt; &lt;image id&gt;'
 2.  Run 'sudo docker pull onesysadmin/tesseract' or use a Dockerfile with 'FROM onesysadmin/tesseract'
 3.  Build the image as described above if changes to the default configuration provided are needed
 
