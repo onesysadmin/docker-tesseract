@@ -19,7 +19,7 @@ Vagrantfile and the provision script installs the following:
 * VirtualBox Guest Additions 4.3.18
 * Docker (latest)
 * libpng12-dev
-* libjpeg62.dev
+* libjpeg62-dev
 * libtiff4-dev
 * automake
 * build-essential
